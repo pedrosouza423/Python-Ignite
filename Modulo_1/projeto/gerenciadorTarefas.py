@@ -1,15 +1,20 @@
 tarefas = []
 
 def adicionar_tarefa():
-    tarefa = input("Digite a descrição da tarefa: ")
+    descricao = input("Digite a descrição da tarefa: ")
+    tarefa = {
+        "descricao": descricao,
+        "completa": False
+    }
     tarefas.append(tarefa)
-    print(f"Tarefa '{tarefa}' adicionada.")
+    print(f"Tarefa '{descricao}' adicionada.")
 
 def ver_tarefas():
     if tarefas:
         print("Tarefas:")
         for i, tarefa in enumerate(tarefas, start=1):
-            print(f"{i}.[{('X' if tarefa.endswith(' (completa)') else ' ')}] {tarefa}")
+            status = "X" if tarefa["completa"] else " "
+            print(f"{i}.[{status}] {tarefa['descricao']}")
     else:
         print("Nenhuma tarefa encontrada.")
 
@@ -20,7 +25,7 @@ def atualizar_tarefa():
             indice = int(input("Digite o número da tarefa que deseja atualizar: ")) - 1
             if 0 <= indice < len(tarefas):
                 nova_descricao = input("Digite a nova descrição da tarefa: ")
-                tarefas[indice] = nova_descricao
+                tarefas[indice]["descricao"] = nova_descricao
                 print("Tarefa atualizada.")
             else:
                 print("Número de tarefa inválido.")
@@ -33,7 +38,7 @@ def completar_tarefa():
         try:
             indice = int(input("Digite o número da tarefa que deseja completar: ")) - 1
             if 0 <= indice < len(tarefas):
-                tarefas[indice] += " (completa)"
+                tarefas[indice]["completa"] = True
                 print("Tarefa marcada como completa.")
             else:
                 print("Número de tarefa inválido.")
@@ -42,19 +47,20 @@ def completar_tarefa():
 
 def deletar_tarefas_completadas():
     global tarefas
-    tarefas = [tarefa for tarefa in tarefas if not tarefa.endswith(" (completa)")]
+    tarefas = [tarefa for tarefa in tarefas if not tarefa["completa"]]
     print("Tarefas completadas deletadas.")
 
 while True:
-    print("Gerenciador de Tarefas")
+    print("\nGerenciador de Tarefas")
     print("1. Adicionar tarefa")
     print("2. Ver tarefas")
     print("3. Atualizar tarefa")
     print("4. Completar tarefa")
     print("5. Deletar tarefas completadas")
     print("6. Sair")
-    
+
     escolha = input("Digite a sua escolha: ")
+
     if escolha == "1":
         adicionar_tarefa()
     elif escolha == "2":
@@ -71,6 +77,3 @@ while True:
         break
     else:
         print("Opção inválida. Tente novamente.")
-    
-
-    
