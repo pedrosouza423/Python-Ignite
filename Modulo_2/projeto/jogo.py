@@ -1,3 +1,4 @@
+import random
 # Personagem: classe mãe
 # Herói: controlado pelo usuário
 # Inímigo: adversário
@@ -25,7 +26,7 @@ class Personagem:
             self.__vida = 0
     
     def atacar(self, alvo):
-        dano = self.get_nivel() * 2
+        dano = random.randint(self.get_nivel() * 2, self.get_nivel() * 4)
         alvo.receber_ataque(dano)
         print(f"O {self.get_nome()} atacou o {alvo.get_nome()} e causou {dano} de dano!")
 
@@ -40,6 +41,11 @@ class Heroi(Personagem):
     
     def exibir_detalhes(self):
         return f"{super().exibir_detalhes()} \nHabilidade: {self.get_habilidade()}\n"
+
+    def ataque_especial(self, alvo):
+        dano = random.randint(self.get_nivel() * 5, self.get_nivel() * 8)
+        alvo.receber_ataque(dano)
+        print(f"{self.get_nome()} usou a habilidade especial {self.get_habilidade()} em {alvo.get_nome()} e causou {dano} de dano!")
         
 class Inimigo(Personagem):
     def __init__(self, nome, vida, nivel, tipo):
@@ -55,7 +61,7 @@ class Inimigo(Personagem):
 class Jogo:
     def __init__(self):
         self.heroi = Heroi(nome="Herói", vida=100, nivel=5, habilidade="Fogo")
-        self.inimigo = Inimigo(nome="Morcego", vida=50, nivel=3, tipo="Voador")
+        self.inimigo = Inimigo(nome="Morcego", vida=80, nivel=5, tipo="Voador")
     
     def iniciar_batalha(self):
         print("Iniciando a batalha")
@@ -69,9 +75,12 @@ class Jogo:
             if escolha == 1:
                 self.heroi.atacar(self.inimigo)
             elif escolha == 2:
-                print("OK")
+                self.heroi.ataque_especial(self.inimigo)
             else:
-                print(f"Escolha invalida! Tente novamente.")
+                print(f"Escolha invalida! Você perdeu a vez.")
+
+            if self.inimigo.get_vida() > 0:
+                self.inimigo.atacar(self.heroi)
 
         if(self.heroi.get_vida() > 0):
             print("\nParabéns, você venceu a batalha!")
